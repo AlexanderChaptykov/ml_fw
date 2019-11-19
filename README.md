@@ -1,3 +1,3 @@
-# ml_fw
-ML framework
-Пример использования фреймворка находится в classifier.ipynb
+# ML framework
+
+Пример использования модуля находится в classifier.ipynb
