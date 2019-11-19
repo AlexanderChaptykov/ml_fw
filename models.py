@@ -1,6 +1,6 @@
 from keras.models import Model
 from keras.layers import *
-from layers import Attention
+from .layers import Attention
 from keras.optimizers import Adam
 
 
