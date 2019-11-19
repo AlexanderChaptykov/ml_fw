@@ -94,8 +94,8 @@ def attention(embeddings_matrix, input_len, target_len):
     model.compile(loss='binary_crossentropy', optimizer=Adam(lr=1e-2), metrics=['accuracy'])
     return model
 
-def elmo_model(embeddings_matrix, input_len, target_len):
-    embed_size = embeddings_matrix.shape[1]
+
+def elmo_model(embed_size, input_len, target_len):
     inp = Input(shape=(input_len, embed_size))
     x = SpatialDropout1D(0.10)(inp)
     x = Bidirectional(GRU(128, return_sequences=True, dropout=0.10, recurrent_dropout=0.10))(x)
