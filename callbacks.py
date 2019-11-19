@@ -20,7 +20,7 @@ def get_callbacks(train_X,
                   train_y,
                   val_X,
                   val_y,
-                  model_path=f'temp_{i}.hdf5'
+                  model_path='temp_.hdf5'
                   ):
     checkpoint = ModelCheckpoint(model_path,
                                  monitor='val_loss',

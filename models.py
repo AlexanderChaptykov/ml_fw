@@ -50,6 +50,39 @@ def cnn2(embeddings_matrix, input_len, target_len):
     return model
 
 
+def cnn3(embedding_matrix, input_len, target_len):
+    filter_sizes = [1,2,3,5]
+    num_filters = 36
+    embed_size = embedding_matrix.shape[1]
+
+    inp = Input(shape=(input_len,))
+    x = Embedding(embedding_matrix.shape[0], embed_size, weights=[embedding_matrix], trainable=False)(inp)
+    x = Reshape((input_len, embed_size, 1))(x)
+    #add
+    maxpool_pool = []
+    for i in range(len(filter_sizes)):
+        conv = Conv2D(num_filters, kernel_size=(filter_sizes[i], embed_size),
+                                    kernel_initializer='he_normal', activation='elu')(x)
+        conv = MaxPool2D(pool_size=(input_len - filter_sizes[i] + 1, 1))(conv)
+        #maxpool_pool.append(MaxPool2D(pool_size=(maxlen - filter_sizes[i] + 1, 1))(conv))
+        #conv = BatchNormalization()(conv)
+        #conv = Dropout(0.6)(conv)
+        maxpool_pool.append(conv)
+    z = Concatenate(axis=1)(maxpool_pool)
+    z = BatchNormalization()(z)
+    z = Dropout(0.4)(z)
+    z = Flatten()(z)
+    z = BatchNormalization()(z)
+    z = Dropout(0.4)(z)
+    outp = Dense(target_len, activation="sigmoid")(z)
+
+    model = Model(inputs=inp, outputs=outp)
+    model.compile(loss='categorical_crossentropy',
+                optimizer=Adam(lr=1e-3),
+                metrics=['accuracy'])
+    return model
+
+
 def attention(embeddings_matrix, input_len, target_len):
     inp = Input(shape=(input_len,))
     x = Embedding(embeddings_matrix.shape[0], embeddings_matrix.shape[1], weights=[embeddings_matrix], trainable=False)(inp)
@@ -59,4 +92,21 @@ def attention(embeddings_matrix, input_len, target_len):
     x = Dense(target_len, activation="sigmoid")(x)
     model = Model(inputs=inp, outputs=x)
     model.compile(loss='binary_crossentropy', optimizer=Adam(lr=1e-2), metrics=['accuracy'])
+    return model
+
+def elmo_model(embeddings_matrix, input_len, target_len):
+    embed_size = embeddings_matrix.shape[1]
+    inp = Input(shape=(input_len, embed_size))
+    x = SpatialDropout1D(0.10)(inp)
+    x = Bidirectional(GRU(128, return_sequences=True, dropout=0.10, recurrent_dropout=0.10))(x)
+    x = Conv1D(64, kernel_size=3, padding='valid', kernel_initializer='glorot_uniform')(x)
+    x = Conv1D(64, kernel_size=3, padding='valid', kernel_initializer='glorot_uniform')(x)
+    avg_pool = GlobalAveragePooling1D()(x)
+    max_pool = GlobalMaxPooling1D()(x)
+    x = concatenate([avg_pool, max_pool])
+    out = Dense(target_len, activation='sigmoid')(x)
+    model = Model(inp, out)
+    model.compile(loss='categorical_crossentropy',
+                optimizer=Adam(lr=1e-3),
+                metrics=['accuracy'])
     return model
