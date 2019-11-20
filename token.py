@@ -8,6 +8,20 @@ from keras.preprocessing.sequence import pad_sequences
 from sklearn.model_selection import StratifiedKFold
 from keras.wrappers.scikit_learn import KerasClassifier
 
+from keras.preprocessing.text import Tokenizer as keras_tokenizer
+
+
+class Tokenizer(keras_tokenizer):
+    def __init__(self, corpus, num_words):
+        super(Tokenizer, self).__init__(num_words)
+        super(Tokenizer, self).fit_on_texts(corpus)
+
+    def texts_to_sequences(self, corpus, input_len) -> numpy.ndarray:
+        data = super(type(self), self).texts_to_sequences(corpus)
+        data = pad_sequences(data, maxlen=input_len)
+        return data
+
+
 def click_patch(self, req):
     cols = [x[0] for x in self.execute(f'describe ({req})')]
     return pd.DataFrame(self.execute(req), columns=cols)
