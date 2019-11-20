@@ -3,11 +3,10 @@ from gensim.models.wrappers import FastText
 import pandas as pd
 import numpy as np
 from keras.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger
+from keras.preprocessing.text import Tokenizer as keras_tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from sklearn.model_selection import StratifiedKFold
 from keras.wrappers.scikit_learn import KerasClassifier
-
-from keras.preprocessing.text import Tokenizer as keras_tokenizer
 
 
 class Tokenizer(keras_tokenizer):
