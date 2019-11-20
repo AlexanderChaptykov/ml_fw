@@ -171,3 +171,26 @@ class Modeling:
                     [[X_train, y_train], [X_val, y_val], [test, test_y]], 
                     f"f{i}_r{run}")
                     ]
+
+def get_embeddings(emb_model, embed_size, tokenizer):
+    embeddings_index = {}
+    l = []
+    for word in tokenizer.word_index:
+        try:
+            embeddings_index[word] = emb_model[word]
+        except:
+            l.append(word)
+    embedding_matrix = np.random.uniform(
+        low=-0.05,
+        high=0.05,
+        size=(len(tokenizer.word_index) + 1, embed_size))
+
+    for word, i in tokenizer.word_index.items():
+        embedding_vector = embeddings_index.get(word)
+        if embedding_vector is not None:
+            # words not found in embedding index will be all-zeros.
+            embedding_matrix[i] = embedding_vector
+        else:
+            print('cant find' ,word)
+    return embedding_matrix
+
