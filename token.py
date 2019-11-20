@@ -3,7 +3,6 @@ from gensim.models.wrappers import FastText
 import pandas as pd
 import numpy as np
 from keras.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger
-from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from sklearn.model_selection import StratifiedKFold
 from keras.wrappers.scikit_learn import KerasClassifier
@@ -16,7 +15,7 @@ class Tokenizer(keras_tokenizer):
         super(Tokenizer, self).__init__(num_words)
         super(Tokenizer, self).fit_on_texts(corpus)
 
-    def texts_to_sequences(self, corpus, input_len) -> numpy.ndarray:
+    def texts_to_sequences(self, corpus, input_len) -> np.ndarray:
         data = super(type(self), self).texts_to_sequences(corpus)
         data = pad_sequences(data, maxlen=input_len)
         return data
