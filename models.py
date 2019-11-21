@@ -84,16 +84,16 @@ def cnn3(embedding_matrix, input_len, target_len, metrics=['accuracy']):
     return model
 
 
-
-def attention(embeddings_matrix, input_len, target_len, metrics=['accuracy']):
+def attention(embedding_matrix, input_len, target_len, metrics=['accuracy']):
     inp = Input(shape=(input_len,))
-    x = Embedding(embeddings_matrix.shape[0], embeddings_matrix.shape[1], weights=[embeddings_matrix], trainable=False)(inp)
+    x = Embedding(embedding_matrix.shape[0], embed_size, weights=[embedding_matrix], trainable=False)(inp)
     x = Bidirectional(LSTM(128, return_sequences=True))(x)
     x = Bidirectional(LSTM(64, return_sequences=True))(x)
     x = Attention(input_len)(x)
+    x = Dense(64, activation="relu")(x)
     x = Dense(target_len, activation="sigmoid")(x)
     model = Model(inputs=inp, outputs=x)
-    model.compile(loss='binary_crossentropy', optimizer=Adam(lr=1e-2), metrics=metrics)
+    model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=1e-3), metrics=metrics)
     return model
 
 

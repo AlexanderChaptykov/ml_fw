@@ -1,5 +1,5 @@
 from keras.engine.topology import Layer
-from keras import initializers, regularizers, constraints, optimizers, layers, callbacks
+from keras import initializers, regularizers, constraints
 from keras import backend as K
 
 
@@ -22,7 +22,6 @@ class Attention(Layer):
         self.features_dim = 0
         super(Attention, self).__init__(**kwargs)
 
-
     def build(self, input_shape):
         assert len(input_shape) == 3
 
@@ -44,17 +43,15 @@ class Attention(Layer):
 
         self.built = True
 
-
     def compute_mask(self, input, input_mask=None):
         return None
-
 
     def call(self, x, mask=None):
         features_dim = self.features_dim
         step_dim = self.step_dim
 
         eij = K.reshape(K.dot(K.reshape(x, (-1, features_dim)),
-                        K.reshape(self.W, (features_dim, 1))), (-1, step_dim))
+                              K.reshape(self.W, (features_dim, 1))), (-1, step_dim))
 
         if self.bias:
             eij += self.b
@@ -72,6 +69,5 @@ class Attention(Layer):
         weighted_input = x * a
         return K.sum(weighted_input, axis=1)
 
-
     def compute_output_shape(self, input_shape):
-        return input_shape[0],  self.features_dim
+        return input_shape[0], self.features_dim
