@@ -2,7 +2,7 @@ from keras.models import Model
 from keras.layers import *
 from .layers import Attention
 from keras.optimizers import Adam
-
+from keras.regularizers import l1
 
 def base_cnn(embeddings_matrix, input_len, target_len, metrics=['accuracy']):
     """{'embedding_matrix':embedding_matrix, 'MAX_SEQUENCE_LENGTH':MAX_SEQUENCE_LENGTH}"""
@@ -25,7 +25,7 @@ def base_cnn(embeddings_matrix, input_len, target_len, metrics=['accuracy']):
     x = Dense(embeddings_matrix.shape[1], activation='relu')(x)
     preds = Dense(target_len, activation='sigmoid')(x)
     model = Model(sequence_input, preds)
-    model.compile(loss='binary_crossentropy', optimizer=Adam(lr=1e-2), metrics=metrics)
+    model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=1e-3), metrics=metrics)
     return model
 
 
@@ -48,6 +48,7 @@ def cnn2(embeddings_matrix, input_len, target_len, metrics=['accuracy']):
     model = Model(inputs=inp, outputs=outp)
     model.compile(loss='binary_crossentropy', optimizer=Adam(lr=1e-2), metrics=metrics)
     return model
+
 
 
 def cnn3(embedding_matrix, input_len, target_len, metrics=['accuracy']):
@@ -81,6 +82,7 @@ def cnn3(embedding_matrix, input_len, target_len, metrics=['accuracy']):
                   optimizer=Adam(lr=1e-3),
                   metrics=metrics)
     return model
+
 
 
 def attention(embeddings_matrix, input_len, target_len, metrics=['accuracy']):

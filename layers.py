@@ -1,4 +1,7 @@
 from keras.engine.topology import Layer
+from keras import initializers, regularizers, constraints, optimizers, layers, callbacks
+from keras import backend as K
+
 
 class Attention(Layer):
     def __init__(self, step_dim,
