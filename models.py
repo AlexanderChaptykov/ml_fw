@@ -85,6 +85,7 @@ def cnn3(embedding_matrix, input_len, target_len, metrics=['accuracy']):
 
 
 def attention(embedding_matrix, input_len, target_len, metrics=['accuracy']):
+    embed_size = embedding_matrix.shape[1]
     inp = Input(shape=(input_len,))
     x = Embedding(embedding_matrix.shape[0], embed_size, weights=[embedding_matrix], trainable=False)(inp)
     x = Bidirectional(LSTM(128, return_sequences=True))(x)
