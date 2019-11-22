@@ -4,7 +4,7 @@ from .layers import Attention
 from keras.optimizers import Adam
 from keras.regularizers import l1
 
-def base_cnn(embeddings_matrix, input_len, target_len, metrics=['accuracy']):
+def base_cnn(embeddings_matrix, input_len, target_len, metrics=['accuracy'], loss="categorical_crossentropy"):
     """{'embedding_matrix':embedding_matrix, 'MAX_SEQUENCE_LENGTH':MAX_SEQUENCE_LENGTH}"""
     embedding_layer = Embedding(embeddings_matrix.shape[0],
                                 embeddings_matrix.shape[1],
@@ -25,11 +25,11 @@ def base_cnn(embeddings_matrix, input_len, target_len, metrics=['accuracy']):
     x = Dense(embeddings_matrix.shape[1], activation='relu')(x)
     preds = Dense(target_len, activation='sigmoid')(x)
     model = Model(sequence_input, preds)
-    model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=1e-3), metrics=metrics)
+    model.compile(loss=loss, optimizer=Adam(lr=1e-3), metrics=metrics)
     return model
 
 
-def cnn2(embeddings_matrix, input_len, target_len, metrics=['accuracy']):
+def cnn2(embeddings_matrix, input_len, target_len, metrics=['accuracy'], loss="categorical_crossentropy"):
     filter_sizes = [1, 2, 3, 5]
     num_filters = 36
     inp = Input(shape=(input_len,))
@@ -46,12 +46,12 @@ def cnn2(embeddings_matrix, input_len, target_len, metrics=['accuracy']):
     z = Dropout(0.1)(z)
     outp = Dense(target_len, activation="sigmoid")(z)
     model = Model(inputs=inp, outputs=outp)
-    model.compile(loss='binary_crossentropy', optimizer=Adam(lr=1e-2), metrics=metrics)
+    model.compile(loss=loss, optimizer=Adam(lr=1e-2), metrics=metrics)
     return model
 
 
 
-def cnn3(embedding_matrix, input_len, target_len, metrics=['accuracy']):
+def cnn3(embedding_matrix, input_len, target_len, metrics=['accuracy'], loss="categorical_crossentropy"):
     filter_sizes = [1,2,3,5]
     num_filters = 36
     embed_size = embedding_matrix.shape[1]
@@ -78,13 +78,13 @@ def cnn3(embedding_matrix, input_len, target_len, metrics=['accuracy']):
     outp = Dense(target_len, activation="sigmoid")(z)
 
     model = Model(inputs=inp, outputs=outp)
-    model.compile(loss='categorical_crossentropy',
+    model.compile(loss=loss,
                   optimizer=Adam(lr=1e-3),
                   metrics=metrics)
     return model
 
 
-def attention(embedding_matrix, input_len, target_len, metrics=['accuracy']):
+def attention(embedding_matrix, input_len, target_len, metrics=['accuracy'], loss="categorical_crossentropy"):
     embed_size = embedding_matrix.shape[1]
     inp = Input(shape=(input_len,))
     x = Embedding(embedding_matrix.shape[0], embed_size, weights=[embedding_matrix], trainable=False)(inp)
@@ -94,11 +94,11 @@ def attention(embedding_matrix, input_len, target_len, metrics=['accuracy']):
     x = Dense(64, activation="relu")(x)
     x = Dense(target_len, activation="sigmoid")(x)
     model = Model(inputs=inp, outputs=x)
-    model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=1e-3), metrics=metrics)
+    model.compile(loss=loss, optimizer=Adam(lr=1e-3), metrics=metrics)
     return model
 
 
-def elmo_model(embed_size, input_len, target_len, metrics=['accuracy']):
+def elmo_model(embed_size, input_len, target_len, metrics=['accuracy'], loss="categorical_crossentropy"):
     inp = Input(shape=(input_len, embed_size))
     x = SpatialDropout1D(0.10)(inp)
     x = Bidirectional(GRU(128, return_sequences=True, dropout=0.10, recurrent_dropout=0.10))(x)
@@ -109,7 +109,7 @@ def elmo_model(embed_size, input_len, target_len, metrics=['accuracy']):
     x = concatenate([avg_pool, max_pool])
     out = Dense(target_len, activation='sigmoid')(x)
     model = Model(inp, out)
-    model.compile(loss='categorical_crossentropy',
+    model.compile(loss=loss,
                   optimizer=Adam(lr=1e-3),
                   metrics=metrics)
     return model
