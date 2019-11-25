@@ -1,12 +1,19 @@
-from clickhouse_driver import Client
-from gensim.models.wrappers import FastText
 import pandas as pd
 import numpy as np
+import re
 from keras.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger
 from keras.preprocessing.text import Tokenizer as keras_tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from sklearn.model_selection import StratifiedKFold
 from keras.wrappers.scikit_learn import KerasClassifier
+from nltk.stem import WordNetLemmatizer
+from selectolax.parser import HTMLParser
+from nltk.corpus import stopwords
+from pymystem3 import Mystem
+
+
+wordnet_lemmatizer = WordNetLemmatizer()
+stem = Mystem()
 
 
 class Tokenizer(keras_tokenizer):
@@ -20,74 +27,80 @@ class Tokenizer(keras_tokenizer):
         return data
 
 
-def click_patch(self, req):
-    cols = [x[0] for x in self.execute(f'describe ({req})')]
-    return pd.DataFrame(self.execute(req), columns=cols)
-Client.get_df = click_patch
+class Preparation:
+    """
+    # example:
+    params = {
+    "chars_n_digs_only": True,
+    "stop_words": True,
+    "lemm": True,
+    'cut_first_words': False
+    }
+    a = Preparation(od, cor)
+    a.texts # get prepared texts
+    """
+
+    def __init__(self, params, corpus):
+        self.params = params
+        self.corpus = corpus
+        self.start()
+        # self.__dict__.update(params)
+        # 2 var
+        # for func in params:
+        #    if params[func]:
+        #        getattr(self, func)()
 
 
-class Tokenz: 
-    def __init__(self, MAX_SIZE_INIT=None, MAX_NB_WORDS=50000, MAX_SEQUENCE_LENGTH=500):
-        """get train, target"""
-        self.MAX_NB_WORDS = MAX_NB_WORDS
-        self.MAX_SIZE_INIT = MAX_SIZE_INIT
-        self.MAX_SEQUENCE_LENGTH = MAX_SEQUENCE_LENGTH
-    
-    
-    def get_df(self, PATH_TO_CSV):
-        """Получаем дф для последующей тренировки"""
-        client = Client('localhost')
-        train_select = pd.read_csv(PATH_TO_CSV).iloc[:self.MAX_SIZE_INIT]
-        text = client.get_df('select url, any(text) as X from url_cleantxt group by url')
-        text['url'] = [x[7:] for x in text['url']] 
-        df = text.merge(train_select, left_on='url', right_on='domain').drop(['Unnamed: 0', 'domain'], axis=1)
-        df['X'] = self.get_first_words(df['X'])
-        return df
+    def start(self):
+        self.texts = []
+        for text in self.corpus:
+            # print(text)
+            for func in self.params:
+                if self.params[func]:
+                    text = getattr(self, func)(text, *[self.params[func]])
+                print(text)
+            self.texts.append(text)
 
 
-    def get_first_words(self, corpus):
-        """У каждого текста берем только первые 500 слов"""
-        new_corp = []
-        for txt in corpus:
-            new_corp.append(' '.join(txt.split()[:self.MAX_SEQUENCE_LENGTH]))
-        return new_corp    
+    def html_to_text(self, html):
+        tree = HTMLParser(html)
+        if tree.body is None:
+            return 'return None'
+        for tag in tree.css('script'):
+            tag.decompose()
+        for tag in tree.css('style'):
+            tag.decompose()
+        text = tree.body.text(separator='\n')
+        return text
 
 
-    def train_emb_matrix(self, PATH_TO_MODEL, model_gensim=None):
-        print('Загрузка модели')
-        if not model_gensim:
-            model_gensim = FastText.load_fasttext_format(PATH_TO_MODEL)
-        
-        print('Создание матрицы')
-        embeddings_index = {}
-        l = []
-        for word in self.tokenizer.word_index:
-            try:
-                embeddings_index[word] = model_gensim.wv[word] 
-            except:
-                l.append(word)
-        embedding_matrix = np.zeros((len(self.tokenizer.word_index) + 1, model_gensim.vector_size))
-        for word, i in self.tokenizer.word_index.items():
-            embedding_vector = embeddings_index.get(word)
-            if embedding_vector is not None:
-                # words not found in embedding index will be all-zeros.
-                embedding_matrix[i] = embedding_vector
-        self.embedding_matrix = embedding_matrix
-        self.model_gensim = model_gensim
+    def lemm(self, text, *args):
+        stem = Mystem()
+        res = stem.lemmatize(text)
+        return ''.join(res[:-1])
 
 
-    def train_tokenizer(self, corpus):
-        self.tokenizer = Tokenizer(num_words=self.MAX_NB_WORDS)
-        self.tokenizer.fit_on_texts(corpus)
-        print('tokenizer подготовлен')
-        
-        
-    def transform(self, corpus):
-        """Трансформируем дф для дальнейшего обучения"""
-        train = self.tokenizer.texts_to_sequences(corpus)
-        train = pad_sequences(train, maxlen=self.MAX_SEQUENCE_LENGTH)
-        return train
+    def stop_words(self, text, *args):
+        text = text.split()
+        russian_stopwords = stopwords.words("russian")
+        stopwords_extension = ['ко']
+        russian_stopwords = russian_stopwords + stopwords_extension
+        stops = set(stopwords.words("english")) | set(russian_stopwords)
+        res = ' '.join([w for w in text if not ((w in stops) or len(w) == 1)])
+        return res
 
+    def chars_n_digs_only(self, text, *args):
+        # print(text)
+        # заменяю переносы строк, табуляции и технические символы
+        text = ' '.join(text.split())
+        # оставляю только слова и перевожу в нижний регистр
+        text = re.sub(r'[^a-zA-Zа-яА-Я ]+', '', text).lower()
+        return text
+
+    def cut_first_words(self, text, *args):
+        # print('--')
+        size = args[0]
+        return ' '.join(text.split()[:size])
 
 
 class Modeling:
