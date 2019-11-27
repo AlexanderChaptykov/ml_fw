@@ -93,9 +93,10 @@ class Preparation:
     def chars_n_digs_only(self, text, *args):
         # print(text)
         # заменяю переносы строк, табуляции и технические символы
-        text = ' '.join(str(text).split())
+
         # оставляю только слова и перевожу в нижний регистр
-        text = re.sub(r'[^a-zA-Zа-яА-Я ]+', '', text).lower()
+        text = re.sub(r'[^a-zA-Zа-яА-Я ]+', ' ', str(text)).lower()
+        text = ' '.join(str(text).split())
         return text
 
 
