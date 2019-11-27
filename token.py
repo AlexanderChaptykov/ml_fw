@@ -36,7 +36,7 @@ class Preparation:
     "lemm": True,
     'cut_first_words': False
     }
-    a = Preparation(od, cor)
+    a = Preparation(od, params)
     a.texts # get prepared texts
     """
 
@@ -89,13 +89,15 @@ class Preparation:
         res = ' '.join([w for w in text if not ((w in stops) or len(w) == 1)])
         return res
 
+
     def chars_n_digs_only(self, text, *args):
         # print(text)
         # заменяю переносы строк, табуляции и технические символы
-        text = ' '.join(text.split())
+        text = ' '.join(str(text).split())
         # оставляю только слова и перевожу в нижний регистр
         text = re.sub(r'[^a-zA-Zа-яА-Я ]+', '', text).lower()
         return text
+
 
     def cut_first_words(self, text, *args):
         # print('--')
