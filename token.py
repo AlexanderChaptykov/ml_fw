@@ -58,7 +58,7 @@ class Preparation:
             for func in self.params:
                 if self.params[func]:
                     text = getattr(self, func)(text, *[self.params[func]])
-                print(text)
+                #print(text)
             self.texts.append(text)
 
 
