@@ -84,7 +84,9 @@ def cnn3(embedding_matrix, input_len, target_len, metrics=['accuracy'], loss="ca
     return model
 
 
-def attention(embedding_matrix, input_len, target_len, metrics=['accuracy'], loss="categorical_crossentropy"):
+def attention(embedding_matrix, input_len, target_len, metrics=['accuracy'],
+              loss="categorical_crossentropy",
+              activation="sigmoid"):
     embed_size = embedding_matrix.shape[1]
     inp = Input(shape=(input_len,))
     x = Embedding(embedding_matrix.shape[0], embed_size, weights=[embedding_matrix], trainable=False)(inp)
@@ -92,7 +94,7 @@ def attention(embedding_matrix, input_len, target_len, metrics=['accuracy'], los
     x = Bidirectional(LSTM(64, return_sequences=True))(x)
     x = Attention(input_len)(x)
     x = Dense(64, activation="relu")(x)
-    x = Dense(target_len, activation="sigmoid")(x)
+    x = Dense(target_len, activation=activation)(x)
     model = Model(inputs=inp, outputs=x)
     model.compile(loss=loss, optimizer=Adam(lr=1e-3), metrics=metrics)
     return model

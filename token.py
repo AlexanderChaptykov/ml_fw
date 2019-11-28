@@ -219,6 +219,6 @@ def get_embeddings(emb_model, embed_size, tokenizer):
             # words not found in embedding index will be all-zeros.
             embedding_matrix[i] = embedding_vector
         else:
-            print('cant find' ,word)
+            print('cant find', word)
     return embedding_matrix
 
