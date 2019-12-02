@@ -4,9 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # k means determine k
-def kmeans(X, max_clusters=10):
+def kmeans_plot(X, min_clusters=1, max_clusters=10):
     distortions = []
-    K = range(1, max_clusters)
+    K = range(min_clusters, max_clusters)
     for k in K:
         kmeanModel = KMeans(n_clusters=k).fit(X)
         kmeanModel.fit(X)
