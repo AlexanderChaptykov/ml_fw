@@ -16,7 +16,7 @@ class RocAucEvaluation(Callback):
             print(f"ROC-AUC micro avg {self.type_} - epoch: {epoch+1} - score: {score}\n")
 
 
-def get_callbacks(X_train, X_test, y_train, y_test,
+def get_callbacks(X_train, X_test, y_train, y_test, patience=2,
                   model_path='temp_.hdf5'):
     checkpoint = ModelCheckpoint(model_path,
                                  monitor='val_loss',
@@ -24,7 +24,7 @@ def get_callbacks(X_train, X_test, y_train, y_test,
                                  save_best_only=True,
                                  mode='auto')
 
-    early = EarlyStopping(monitor="val_loss", mode="min", patience=2, verbose=1)
+    early = EarlyStopping(monitor="val_loss", mode="min", patience=patience, verbose=1)
     ra_val = RocAucEvaluation(validation_data=(X_test, y_test), interval=1, type_="val")
     ra_train = RocAucEvaluation(validation_data=(X_train, y_train), interval=1, type_="train")
     logger = CSVLogger('keras.log', separator=',', append=True)
