@@ -54,6 +54,7 @@ class Preparation:
     def start(self):
         self.texts = []
         for text in self.corpus:
+            text = str(text)
             # print(text)
             for func in self.params:
                 if self.params[func]:
