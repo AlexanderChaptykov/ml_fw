@@ -36,11 +36,11 @@ class Preparation:
     "lemm": True,
     'cut_first_words': False
     }
-    a = Preparation(corpus, params)
-    a.texts # get prepared texts
+    a = Preparation(corpus, params).texts
+     # get prepared texts
     """
 
-    def __init__(self, params, corpus):
+    def __init__(self, corpus, params):
         self.params = params
         self.corpus = corpus
         self.start()
