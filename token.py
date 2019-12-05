@@ -36,7 +36,7 @@ class Preparation:
     "lemm": True,
     'cut_first_words': False
     }
-    a = Preparation(od, params)
+    a = Preparation(corpus, params)
     a.texts # get prepared texts
     """
 

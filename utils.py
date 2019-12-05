@@ -26,19 +26,17 @@ def click_patch(self, req):
     return pd.DataFrame(self.execute(req), columns=cols)
 
 
-def obj_dic(d):
-    """Convert dict to object"""
-    top = type('new', (object,), d)
-    seqs = tuple, list, set, frozenset
-    for i, j in d.items():
-        if isinstance(j, dict):
-            setattr(top, i, obj_dic(j))
-        elif isinstance(j, seqs):
-            setattr(top, i,
-                type(j)(obj_dic(sj) if isinstance(sj, dict) else sj for sj in j))
-        else:
-            setattr(top, i, j)
-    return top
+class Struct:
+    """Convert dict to object
+        c_ = {
+            "DATA_FOLDER": 'data',
+            "fil_1": 'df.csv',
+            }
+
+        c_ = Struct(**c_)
+    """
+    def __init__(self, **entries):
+        self.__dict__.update(entries)
 
 
 Client.get_df = click_patch
