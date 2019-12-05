@@ -62,7 +62,7 @@ class Preparation:
             self.texts.append(text)
 
 
-    def html_to_text(self, html):
+    def html_to_text(self, html, *args):
         tree = HTMLParser(html)
         if tree.body is None:
             return 'return None'
