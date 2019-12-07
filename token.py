@@ -98,7 +98,7 @@ class Preparation:
         text = tree.body.text(separator='\n')
         return text
 
-    def text_cleaner(text, clean_stopwords=True, remove_short_words=True):
+    def text_cleaner(self, text, clean_stopwords=True, remove_short_words=True):
         newString = text.lower()
         newString = BeautifulSoup(newString, "lxml").text
         newString = re.sub(r'\([^)]*\)', '', newString)
