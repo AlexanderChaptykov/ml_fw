@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f73adb76-6a1a-4f2f-bcdd-630cd1e0817e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/token.py" beforeDir="false" afterPath="$PROJECT_DIR$/token.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,8 +15,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/token.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="269">
-              <caret line="112" column="13" lean-forward="true" selection-start-line="112" selection-start-column="13" selection-end-line="112" selection-end-column="13" />
+            <state relative-caret-position="255">
+              <caret line="62" column="41" lean-forward="true" selection-start-line="62" selection-start-column="4" selection-end-line="62" selection-end-column="41" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
                 <element signature="e#1037#4462#0" />
@@ -230,11 +229,11 @@
     <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17000802" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17000802" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Version Control" />
       <window_info anchor="bottom" id="Python Console" />
-      <window_info anchor="bottom" id="Terminal" visible="true" weight="0.28240108" />
+      <window_info active="true" anchor="bottom" id="Terminal" visible="true" weight="0.28240108" />
       <window_info anchor="bottom" id="Event Log" sideWeight="0.50040096" side_tool="true" weight="0.28240108" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -344,8 +343,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/token.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="112" column="13" lean-forward="true" selection-start-line="112" selection-start-column="13" selection-end-line="112" selection-end-column="13" />
+        <state relative-caret-position="255">
+          <caret line="62" column="41" lean-forward="true" selection-start-line="62" selection-start-column="4" selection-end-line="62" selection-end-column="41" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
             <element signature="e#1037#4462#0" />

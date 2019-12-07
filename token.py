@@ -21,9 +21,9 @@ class Tokenizer(keras_tokenizer):
         super(Tokenizer, self).__init__(num_words)
         super(Tokenizer, self).fit_on_texts(corpus)
 
-    def texts_to_sequences(self, corpus, input_len) -> np.ndarray:
+    def texts_to_sequences(self, corpus, input_len, padding='post') -> np.ndarray:
         data = super(type(self), self).texts_to_sequences(corpus)
-        data = pad_sequences(data, maxlen=input_len)
+        data = pad_sequences(data, maxlen=input_len, padding=padding)
         return data
 
 stop_words = set(stopwords.words('english'))
