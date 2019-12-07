@@ -96,7 +96,7 @@ def attention(embedding_matrix, input_len, target_len, metrics=['accuracy'],
     x = Dense(64, activation="relu")(x)
     x = Dense(target_len, activation=activation)(x)
     model = Model(inputs=inp, outputs=x)
-    model.compile(loss=loss, optimizer=Adam(lr=1e-3), metrics=metrics)
+    model.compile(loss=loss, Adamoptimizer=Adam(lr=1e-3), metrics=metrics)
     return model
 
 
