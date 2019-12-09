@@ -3,17 +3,26 @@ from sklearn.metrics import roc_auc_score
 
 
 class RocAucEvaluation(Callback):
-    def __init__(self, validation_data=(), interval=1, type_="Train"):
+    """
+    Считает рок_аук из сета который получается при автоматическом разделении модели,
+    либо из заданного сета
+    validation_data - tuple or list в котором 2 элемента, первый это X а второй y
+
+    """
+
+    def __init__(self, validation_data=[], interval=1):
         super(Callback, self).__init__()
         self.interval = interval
-        self.X_val, self.y_val = validation_data
-        self.type_ = type_
+        if validation_data:
+            self.validation_data = validation_data
 
     def on_epoch_end(self, epoch, logs={}):
         if epoch % self.interval == 0:
-            y_pred = self.model.predict(self.X_val, verbose=0)
-            score = roc_auc_score(self.y_val, y_pred, average='micro')
-            print(f"ROC-AUC micro avg {self.type_} - epoch: {epoch+1} - score: {score}\n")
+            y_pred = self.model.predict(self.validation_data[0], verbose=0)
+            score = roc_auc_score(self.validation_data[1], y_pred, average='micro')
+            print(f"ROC-AUC micro avg - epoch: {epoch + 1} - score: {score}\n")
+
+
 
 
 def get_callbacks(X_train, X_test, y_train, y_test, patience=2,
@@ -24,11 +33,10 @@ def get_callbacks(X_train, X_test, y_train, y_test, patience=2,
                                  save_best_only=True,
                                  mode='auto')
 
-    early = EarlyStopping(monitor="val_loss", mode="min", patience=patience, verbose=1)
-    ra_val = RocAucEvaluation(validation_data=(X_test, y_test), interval=1, type_="val")
-    ra_train = RocAucEvaluation(validation_data=(X_train, y_train), interval=1, type_="train")
-    logger = CSVLogger('keras.log', separator=',', append=True)
-    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=5, min_lr=0.0001)
-
-    callbacks_list = [ra_train, ra_val, early, reduce_lr, logger]
+    callbacks_list = [
+        EarlyStopping(monitor="val_loss", mode="min", patience=patience, verbose=1),
+        RocAucEvaluation(),
+        CSVLogger('keras.log', separator=',', append=True),
+        ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=2, min_lr=0.0001)
+    ]
     return callbacks_list

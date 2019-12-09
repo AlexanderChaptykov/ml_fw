@@ -99,6 +99,26 @@ class Preparation:
         return text
 
     def text_cleaner(self, text, clean_stopwords=True, remove_short_words=True):
+        """We will perform the below preprocessing tasks for our data:
+
+            1.Convert everything to lowercase
+
+            2.Remove HTML tags
+
+            3.Contraction mapping
+
+            4.Remove (‘s)
+
+            5.Remove any text inside the parenthesis ( )
+
+            6.Eliminate punctuations and special characters
+
+            7.Remove stopwords
+
+            8.Remove short words
+
+            Let’s define the function:"""
+
         newString = text.lower()
         newString = BeautifulSoup(newString, "lxml").text
         newString = re.sub(r'\([^)]*\)', '', newString)
