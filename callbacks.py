@@ -25,8 +25,7 @@ class RocAucEvaluation(Callback):
 
 
 
-def get_callbacks(X_train, X_test, y_train, y_test, patience=2,
-                  model_path='temp_.hdf5'):
+def get_callbacks(patience=2, model_path='temp_.hdf5'):
     checkpoint = ModelCheckpoint(model_path,
                                  monitor='val_loss',
                                  verbose=1,
@@ -37,6 +36,6 @@ def get_callbacks(X_train, X_test, y_train, y_test, patience=2,
         EarlyStopping(monitor="val_loss", mode="min", patience=patience, verbose=1),
         RocAucEvaluation(),
         CSVLogger('keras.log', separator=',', append=True),
-        ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=2, min_lr=0.0001)
+        ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=patience, min_lr=0.0001)
     ]
     return callbacks_list
