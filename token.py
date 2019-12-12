@@ -55,6 +55,7 @@ class Preparation:
     """
     # example:
     params = {
+    "html_to_text": True,
     "chars_n_digs_only": True,
     "stop_words": True,
     "lemm": True,
@@ -98,7 +99,7 @@ class Preparation:
         text = tree.body.text(separator='\n')
         return text
 
-    def text_cleaner(self, text, clean_stopwords=True, remove_short_words=True):
+    def text_cleaner(self, text, clean_stopwords=False, remove_short_words=False):
         """We will perform the below preprocessing tasks for our data:
 
             1.Convert everything to lowercase
