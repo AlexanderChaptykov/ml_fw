@@ -134,11 +134,9 @@ class Preparation:
 
 
     def html_to_text(self, html, *args):
-        tit = html.xpath('//title/text()').get()
-        if isinstance(tit, str) and len(tit) > 0:
-            return tit
-        else:
-            return "False"
+        raw = BeautifulSoup(html, 'html.parser').text
+        raw = ' '.join(raw.split())
+        return raw
 
         tree = HTMLParser(html)
         if tree.body is None:
@@ -149,7 +147,7 @@ class Preparation:
             tag.decompose()
         text = tree.body.text(separator='\n')
         text = ' '.join(text.split())
-        return tit + text
+        return text
 
 
     def text_cleaner(self, text, clean_stopwords=False, remove_short_words=False):
