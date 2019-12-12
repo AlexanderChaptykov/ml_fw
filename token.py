@@ -122,6 +122,7 @@ class Preparation:
 
     def start(self):
         self.texts = []
+        print(self.params)
         for text in self.corpus:
             text = str(text)
             # print(text)
@@ -132,7 +133,6 @@ class Preparation:
             self.texts.append(text)
 
 
-    @Funct.log
     def html_to_text(self, html, *args):
         tree = HTMLParser(html)
         if tree.body is None:
@@ -145,7 +145,6 @@ class Preparation:
         return text
 
 
-    @Funct.log
     def text_cleaner(self, text, clean_stopwords=False, remove_short_words=False):
         import inspect
 
@@ -191,14 +190,12 @@ class Preparation:
         return (" ".join(tokens)).strip()
 
 
-    @Funct.log
     def lemm(self, text, *args):
         stem = Mystem()
         res = stem.lemmatize(text)
         return ''.join(res[:-1])
 
 
-    @Funct.log
     def stop_words(self, text, *args):
         text = text.split()
         russian_stopwords = stopwords.words("russian")
@@ -209,7 +206,6 @@ class Preparation:
         return res
 
 
-    @Funct.log
     def chars_n_digs_only(self, text, *args):
         # print(text)
         # заменяю переносы строк, табуляции и технические символы
@@ -220,7 +216,6 @@ class Preparation:
         return text
 
 
-    @Funct.log
     def cut_first_words(self, text, *args):
         # print('--')
         size = args[0]
