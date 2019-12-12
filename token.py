@@ -152,9 +152,6 @@ class Preparation:
 
 
     def text_cleaner(self, text, clean_stopwords=False, remove_short_words=False):
-        import inspect
-
-        this_function_name = inspect.currentframe().f_code.co_name
 
         """We will perform the below preprocessing tasks for our data:
 
