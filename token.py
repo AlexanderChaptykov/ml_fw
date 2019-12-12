@@ -3,6 +3,7 @@ import numpy as np
 import re
 import logging
 import datetime
+import lxml
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger
 from tensorflow.keras.preprocessing.text import Tokenizer as keras_tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -134,9 +135,9 @@ class Preparation:
 
 
     def html_to_text(self, html, *args):
-        raw = BeautifulSoup(html, 'html.parser').text
-        raw = ' '.join(raw.split())
-        return raw
+        title = lxml.html.fromstring(html).xpath('//title/text()') #list
+        desc = lxml.html.fromstring(html).xpath("//*[contains(@name, 'description')]/@content") #list
+
 
         tree = HTMLParser(html)
         if tree.body is None:
@@ -146,8 +147,8 @@ class Preparation:
         for tag in tree.css('style'):
             tag.decompose()
         text = tree.body.text(separator='\n')
-        text = ' '.join(text.split())
-        return text
+        text = ' '.join(text.split()) #string
+        return ' '.join(title + desc + [text])
 
 
     def text_cleaner(self, text, clean_stopwords=False, remove_short_words=False):
