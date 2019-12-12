@@ -134,6 +134,12 @@ class Preparation:
 
 
     def html_to_text(self, html, *args):
+        tit = html.xpath('//title/text()').get()
+        if isinstance(tit, str) and len(tit) > 0:
+            return tit
+        else:
+            return "False"
+
         tree = HTMLParser(html)
         if tree.body is None:
             return 'return None'
@@ -143,7 +149,7 @@ class Preparation:
             tag.decompose()
         text = tree.body.text(separator='\n')
         text = ' '.join(text.split())
-        return text
+        return tit + text
 
 
     def text_cleaner(self, text, clean_stopwords=False, remove_short_words=False):
