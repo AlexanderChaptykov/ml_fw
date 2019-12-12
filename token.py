@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import re
+import logging
+import datetime
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger
 from tensorflow.keras.preprocessing.text import Tokenizer as keras_tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -15,6 +17,46 @@ from bs4 import BeautifulSoup
 wordnet_lemmatizer = WordNetLemmatizer()
 stem = Mystem()
 
+FORMAT = '%(asctime)-15s %(clientip)s %(user)-8s %(message)s'
+
+logging.basicConfig(format=FORMAT)
+logger = logging.getLogger()
+
+
+class Funct:
+    """
+    How to get a function name as a string?
+    I like using a function decorator. I added a class,
+    which also times the function time.
+    Assume gLog is a standard python logger:
+
+    how to use
+    @Funct.log
+    def my_func():
+        pass
+
+    """
+    def __init__(self, funcName):
+        self.funcName = funcName
+
+    def __enter__(self):
+        logger.info(f'{self.funcName} started')
+        self.init_time = datetime.datetime.now()
+        return self
+
+    def __exit__(self, type, value, tb):
+        logger.info(f'{self.funcName} finished: {datetime.datetime.now() - self.init_time}')
+
+
+    @classmethod
+    def log(cls, func):
+        def func_wrapper(*args, **kwargs):
+            with cls(func.__name__):
+                return func(*args, **kwargs)
+
+        return func_wrapper
+
+
 
 class Tokenizer(keras_tokenizer):
     def __init__(self, corpus, num_words):
@@ -27,6 +69,7 @@ class Tokenizer(keras_tokenizer):
         return data
 
 stop_words = set(stopwords.words('english'))
+
 contraction_mapping = {"ain't": "is not", "aren't": "are not","can't": "cannot", "'cause": "because", "could've": "could have", "couldn't": "could not",
                            "didn't": "did not",  "doesn't": "does not", "don't": "do not", "hadn't": "had not", "hasn't": "has not", "haven't": "have not",
                            "he'd": "he would","he'll": "he will", "he's": "he is", "how'd": "how did", "how'd'y": "how do you", "how'll": "how will", "how's": "how is",
@@ -50,6 +93,7 @@ contraction_mapping = {"ain't": "is not", "aren't": "are not","can't": "cannot",
                            "y'all'd": "you all would","y'all'd've": "you all would have","y'all're": "you all are","y'all've": "you all have",
                            "you'd": "you would", "you'd've": "you would have", "you'll": "you will", "you'll've": "you will have",
                            "you're": "you are", "you've": "you have"}
+
 
 class Preparation:
     """
@@ -88,6 +132,7 @@ class Preparation:
             self.texts.append(text)
 
 
+    @Funct.log
     def html_to_text(self, html, *args):
         tree = HTMLParser(html)
         if tree.body is None:
@@ -99,7 +144,13 @@ class Preparation:
         text = tree.body.text(separator='\n')
         return text
 
+
+    @Funct.log
     def text_cleaner(self, text, clean_stopwords=False, remove_short_words=False):
+        import inspect
+
+        this_function_name = inspect.currentframe().f_code.co_name
+
         """We will perform the below preprocessing tasks for our data:
 
             1.Convert everything to lowercase
@@ -139,12 +190,15 @@ class Preparation:
 
         return (" ".join(tokens)).strip()
 
+
+    @Funct.log
     def lemm(self, text, *args):
         stem = Mystem()
         res = stem.lemmatize(text)
         return ''.join(res[:-1])
 
 
+    @Funct.log
     def stop_words(self, text, *args):
         text = text.split()
         russian_stopwords = stopwords.words("russian")
@@ -155,6 +209,7 @@ class Preparation:
         return res
 
 
+    @Funct.log
     def chars_n_digs_only(self, text, *args):
         # print(text)
         # заменяю переносы строк, табуляции и технические символы
@@ -165,6 +220,7 @@ class Preparation:
         return text
 
 
+    @Funct.log
     def cut_first_words(self, text, *args):
         # print('--')
         size = args[0]
