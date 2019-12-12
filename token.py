@@ -122,7 +122,7 @@ class Preparation:
 
     def start(self):
         self.texts = []
-        print(self.params)
+        #print(self.params)
         for text in self.corpus:
             text = str(text)
             # print(text)
@@ -142,6 +142,7 @@ class Preparation:
         for tag in tree.css('style'):
             tag.decompose()
         text = tree.body.text(separator='\n')
+        text = ' '.join(text.split())
         return text
 
 
