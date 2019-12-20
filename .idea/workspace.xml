@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f73adb76-6a1a-4f2f-bcdd-630cd1e0817e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/token.py" beforeDir="false" afterPath="$PROJECT_DIR$/token.py" afterDir="false" />
-    </list>
+    <list default="true" id="f73adb76-6a1a-4f2f-bcdd-630cd1e0817e" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,8 +13,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/token.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="136" selection-start-line="136" selection-end-line="136" />
+            <state relative-caret-position="265">
+              <caret line="220" selection-start-line="98" selection-end-line="220" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
                 <element signature="e#1037#4462#0" />
@@ -155,6 +153,7 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
+    <option name="x" value="160" />
     <option name="y" value="23" />
     <option name="width" value="1440" />
     <option name="height" value="877" />
@@ -235,7 +234,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="877" extended-state="0" />
+    <frame x="160" y="23" width="1440" height="877" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
@@ -369,8 +368,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/token.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="136" selection-start-line="136" selection-end-line="136" />
+        <state relative-caret-position="265">
+          <caret line="220" selection-start-line="98" selection-end-line="220" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
             <element signature="e#1037#4462#0" />

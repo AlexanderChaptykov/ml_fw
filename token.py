@@ -1,9 +1,7 @@
-import pandas as pd
 import numpy as np
 import re
 import logging
 import datetime
-import lxml
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger
 from tensorflow.keras.preprocessing.text import Tokenizer as keras_tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
