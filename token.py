@@ -136,15 +136,14 @@ class Preparation:
 
     def html_to_text(self, html, *args):
         tree = HTMLParser(html)
-        if tree.body is None:
-            return ''
         for tag in tree.css('script'):
             tag.decompose()
         for tag in tree.css('style'):
             tag.decompose()
         text = tree.body.text(separator='\n')
-        text = ' '.join(text.split())  # string
+        text = ' '.join(text.split()) #string
         return text
+
 
     def text_cleaner(self, text, clean_stopwords=False, remove_short_words=False):
 
