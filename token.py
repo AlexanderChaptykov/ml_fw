@@ -134,6 +134,7 @@ class Preparation:
             self.texts.append(text)
 
 
+#
     def html_to_text(self, html, *args):
         tree = HTMLParser(html)
         for tag in tree.css('script'):
