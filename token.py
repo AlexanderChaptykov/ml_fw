@@ -135,21 +135,16 @@ class Preparation:
 
 
     def html_to_text(self, html, *args):
-        title = lxml.html.fromstring(html).xpath('//title/text()') #list
-        desc = lxml.html.fromstring(html).xpath("//*[contains(@name, 'description')]/@content") #list
-
-
         tree = HTMLParser(html)
         if tree.body is None:
-            return 'return None'
+            return ''
         for tag in tree.css('script'):
             tag.decompose()
         for tag in tree.css('style'):
             tag.decompose()
         text = tree.body.text(separator='\n')
-        text = ' '.join(text.split()) #string
-        return ' '.join(title + desc + [text])
-
+        text = ' '.join(text.split())  # string
+        return text
 
     def text_cleaner(self, text, clean_stopwords=False, remove_short_words=False):
 
